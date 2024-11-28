@@ -2,64 +2,85 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-
-const PostList = () => {
-  const [posts, setPosts] = useState([]);
+const EditPost = () => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/posts/${id}`, { withCredentials: true });
+        setTitle(response.data.title);
+        setContent(response.data.content);
+      } catch (error) {
+        console.error('Gabim gjatë marrjes së postimit:', error.message);
+      }
+    };
 
-  const fetchPosts = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/posts');
-      setPosts(response.data);
-    } catch (error) {
-      console.error('Gabim gjatë marrjes së postimeve:', error);
+    fetchPost();
+  }, [id]);
+
+  const updatePost = async () => {
+    if (!title || !content) {
+      alert('Titulli dhe përmbajtja janë të detyrueshme!');
+      return;
     }
-  };
-
-  const deletePost = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/posts/${id}`);
-      setPosts(posts.filter((post) => post.id !== id));
+      await axios.put(`http://localhost:5000/posts/${id}`, { title, content }, { withCredentials: true });
+      navigate('/posts');
     } catch (error) {
-      console.error('Gabim gjatë fshirjes së postimit:', error);
+      console.error('Gabim gjatë përditësimit të postimit:', error.message);
     }
   };
 
   return (
-    <div>
-      <h1>Lista e Postimeve</h1>
-      <Link to="/add" className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Shto Postimin</Link>
-      {posts.map((post) => (
-        <div key={post.id} className="border-b py-2">
-          <p><strong>{post.title}</strong>: {post.content}</p>
-          <Link to={`/edit/${post.id}`} className="text-blue-500">Redakto</Link>
-          <button onClick={() => deletePost(post.id)} className="ml-4 bg-red-500 text-white px-2 py-1">Fshi</button>
-        </div>
-      ))}
+    <div className="max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Redakto Postimin</h1>
+      <input
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Titulli"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <textarea
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Përmbajtja"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+      />
+      <button className="bg-blue-500 text-white px-4 py-2" onClick={updatePost}>Përditëso Postimin</button>
     </div>
   );
 };
-
 const AddPost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const navigate = useNavigate();
 
   const addPost = async () => {
+    if (!title || !content) {
+      alert('Titulli dhe përmbajtja janë të detyrueshme!');
+      return;
+    }
     try {
-      await axios.post('http://localhost:5000/api/posts', { title, content });
-      navigate('/posts');
+      const response = await axios.post('http://localhost:5000/posts', { title, content }, { withCredentials: true });
+      
+      // Kontrolloni përgjigjen nga serveri dhe jepni mesazhin e suksesit
+      if (response.status === 201) {
+        alert('Postimi u krijua me sukses!');
+        navigate('/posts');
+      }
     } catch (error) {
-      console.error('Gabim gjatë shtimit të postimit:', error);
+      console.error('Gabim gjatë shtimit të postimit:', error.message);
+      alert('Shtimi i postimit dështoi. Ju lutemi provoni përsëri.');
     }
   };
 
   return (
     <div className="max-w-md mx-auto">
-      <h1>Shto Postimin</h1>
+      <h1 className="text-2xl font-bold mb-4">Shto Postimin</h1>
       <input
         className="border border-gray-300 p-2 w-full mb-4"
         placeholder="Titulli"
@@ -72,58 +93,70 @@ const AddPost = () => {
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button className="bg-blue-500 text-white px-4 py-2" onClick={addPost}>Shto</button>
+      <button className="bg-blue-500 text-white px-4 py-2" onClick={addPost}>Shto Postimin</button>
     </div>
   );
 };
-const EditPost = () => {
-  const { id } = useParams();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const navigate = useNavigate();
+
+
+const PostList = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchPost();
-  }, [id]);
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/posts', { withCredentials: true });
+        setPosts(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchPost = async () => {
+    fetchPosts();
+  }, []);
+
+  const deletePost = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/posts/${id}`);
-      setTitle(response.data.title);
-      setContent(response.data.content);
-    } catch (error) {
-      console.error('Gabim gjatë marrjes së postimit:', error);
+      await axios.delete(`http://localhost:5000/posts/${id}`, { withCredentials: true });
+      setPosts(posts.filter(post => post._id !== id));
+    } catch (err) {
+      console.error('Gabim gjatë fshirjes së postimit:', err.message);
     }
   };
 
-  const updatePost = async () => {
-    try {
-      await axios.put(`http://localhost:5000/api/posts/${id}`, { title, content });
-      navigate('/posts');
-    } catch (error) {
-      console.error('Gabim gjatë përditësimit të postimit:', error);
-    }
-  };
+  if (loading) return <p>Po ngarkohen postimet...</p>;
+  if (error) return <p>Gabim: {error}</p>;
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1>Redakto Postimin</h1>
-      <input
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Titulli"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <textarea
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Përmbajtja"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <button className="bg-blue-500 text-white px-4 py-2" onClick={updatePost}>Përditëso</button>
+    <div>
+      <h1>Lista e Postimeve</h1>
+      {posts.length === 0 ? (
+        <p>Nuk ka postime të shtuar.</p>
+      ) : (
+        <ul>
+          {posts.map((post) => (
+            <li key={post._id} className="mb-4">
+              <h2 className="text-xl font-semibold">{post.title}</h2>
+              <p>{post.content}</p>
+              <div className="mt-2">
+                <Link to={`/edit-post/${post._id}`} className="bg-yellow-500 text-white px-4 py-2">Redakto</Link>
+                <button
+                  onClick={() => deletePost(post._id)}
+                  className="bg-red-500 text-white px-4 py-2 ml-2"
+                >
+                  Fshi
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
 
-
-export { PostList, AddPost, EditPost };
+export { EditPost, AddPost, PostList };
