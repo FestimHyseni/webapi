@@ -1,4 +1,4 @@
-const Post = require('./models/Post');
+const Post = require('../models/post');
 
 // Krijimi i një postimi të ri
 const createPost = async (req, res) => {
