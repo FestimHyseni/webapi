@@ -1,4 +1,4 @@
-const Post = require('../models/Post');
+const Post = require('./models/Post');
 
 // Krijimi i një postimi të ri
 const createPost = async (req, res) => {
@@ -22,26 +22,35 @@ const getPosts = async (req, res) => {
 };
 
 // Përditësimi i një postimi ekzistues
+
 const updatePost = async (req, res) => {
   try {
-    const updatedPost = await Post.findByPk(req.params.id);
-    if (!updatedPost) return res.status(404).json({ message: 'Postimi nuk u gjet' });
-    updatedPost.title = req.body.title;
-    updatedPost.content = req.body.content;
-    await updatedPost.save();
-    res.status(200).json({ message: 'Postimi u përditësua me sukses', post: updatedPost });
+    const { title, content } = req.body;
+    const [updated] = await Post.update({ title, content }, { where: { id: req.params.id } });
+
+    if (updated) {
+      const updatedPost = await Post.findByPk(req.params.id);
+      res.status(200).json({ message: 'Postimi u përditësua me sukses', post: updatedPost });
+    } else {
+      res.status(404).json({ message: 'Postimi nuk u gjet' });
+    }
   } catch (err) {
     res.status(400).json({ message: 'Gabim në përditësimin e postimit', error: err });
   }
 };
 
 // Fshirja e një postimi
+
 const deletePost = async (req, res) => {
   try {
-    const deletedPost = await Post.findByPk(req.params.id);
-    if (!deletedPost) return res.status(404).json({ message: 'Postimi nuk u gjet' });
-    await deletedPost.destroy();
-    res.status(200).json({ message: 'Postimi u fshi me sukses', post: deletedPost });
+    console.log('Marrja e kërkesës DELETE për postimin me ID:', req.params.id);  // Shtimi i log-ut për debugging
+
+    const post = await Post.findByPk(req.params.id);
+    if (!post) {
+      return res.status(404).json({ message: 'Postimi nuk u gjet' });
+    }
+    await post.destroy();
+    res.status(200).json({ message: 'Postimi u fshi me sukses', post: post });
   } catch (err) {
     res.status(400).json({ message: 'Gabim në fshirjen e postimit', error: err });
   }

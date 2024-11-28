@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+// Komponenti për Redaktimin e Postimit
 const EditPost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -54,6 +55,8 @@ const EditPost = () => {
     </div>
   );
 };
+
+// Komponenti për Shtimin e Postimit
 const AddPost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -66,7 +69,6 @@ const AddPost = () => {
     }
     try {
       const response = await axios.post('http://localhost:5000/posts', { title, content }, { withCredentials: true });
-      
       // Kontrolloni përgjigjen nga serveri dhe jepni mesazhin e suksesit
       if (response.status === 201) {
         alert('Postimi u krijua me sukses!');
@@ -98,7 +100,7 @@ const AddPost = () => {
   );
 };
 
-
+// Komponenti për Listën e Postimeve
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,10 +121,12 @@ const PostList = () => {
     fetchPosts();
   }, []);
 
+
   const deletePost = async (id) => {
+    console.log('Dërgimi i kërkesës për DELETE për ID-në:', id);  // Shtimi i log-ut për debugging
     try {
       await axios.delete(`http://localhost:5000/posts/${id}`, { withCredentials: true });
-      setPosts(posts.filter(post => post._id !== id));
+      setPosts(posts.filter(post => post._id !== id));  // Përditëson listën pas fshirjes
     } catch (err) {
       console.error('Gabim gjatë fshirjes së postimit:', err.message);
     }
