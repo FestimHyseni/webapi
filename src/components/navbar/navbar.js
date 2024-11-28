@@ -49,6 +49,16 @@ const Navbar = () => {
             </li>
           </>
         )}
+          {user?.role === 'admin' && (
+          <>
+            <li>
+              <Link to="/posts">Lista e Postimeve</Link>
+            </li>
+            <li>
+              <Link to="/add-post">Krijo Postim</Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

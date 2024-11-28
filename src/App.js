@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar/navbar';
-
+import { AddPost, EditPost, PostList } from './components/posts'; 
 import NoMatch from './components/nomatch/noMatch';
 import Register from './components/Register';
 import Login from './components/Login';
@@ -16,7 +16,6 @@ import "./App.css"
 
 function App() {
  
-
   return (
     <Router>
       <div>
@@ -39,6 +38,9 @@ function App() {
        <Route path="/sponsors" element={<SponsorList />} /> {/* Lista e sponsorëve */}
           <Route path="/add-sponsor" element={<AddSponsor />} /> {/* Shto sponsor */}
           <Route path="/edit-sponsor/:id" element={<EditSponsor />} /> {/* Redakto sponsor */}
+          <Route path="/posts" element={<PostList />} />
+        <Route path="/add" element={<AddPost />} />
+        <Route path="/edit/:id" element={<EditPost />} />
 
           {/* Authentication Routes */}
           <Route path="/register" element={<Register />} />
