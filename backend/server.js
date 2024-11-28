@@ -16,7 +16,7 @@ const Item = require('./models/item');
 const User = require('./models/user');
 const { createItem, getItems, updateItem, deleteItem } = require('./controller/itemController');
 const { createSponsor, getSponsors, updateSponsor, deleteSponsor } = require('./controller/sponsorController');
-
+const { createPost, getPosts, updatePost, deletePost } = require('./controller/postController');
 const app = express();
 
 // Configure session middleware with secure settings
@@ -179,6 +179,12 @@ app.post('/sponsors', isAuthenticated, createSponsor);
 app.get('/sponsors', isAuthenticated, getSponsors);
 app.put('/sponsors/:id', isAuthenticated, updateSponsor);
 app.delete('/sponsors/:id', isAuthenticated, deleteSponsor);
+
+app.post('/posts', isAuthenticated, createPost);
+app.get('/posts', isAuthenticated, getPosts);
+app.put('/posts/:id', isAuthenticated, updatePost);
+app.delete('/posts/:id', isAuthenticated, deletePost);
+
 
 // Initialize server and ensure database and table creation
 const initializeDatabase = async () => {
