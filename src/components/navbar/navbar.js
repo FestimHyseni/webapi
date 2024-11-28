@@ -36,10 +36,23 @@ const Navbar = () => {
             </li>
            
           </>
+          
+        )}
+   {/* Show admin links if the user has a admin role */}
+         {user?.role === 'admin' && (
+          <>
+            <li>
+              <Link to="/sponsors">lista e sponzoreve</Link>
+            </li>
+            <li>
+              <Link to="/add-sponsor">shto sponzor</Link>
+            </li>
+          </>
         )}
       </ul>
     </nav>
   );
 };
+
 
 export default Navbar;

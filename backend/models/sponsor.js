@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Lidhja me databazën
+const sequelize = require('../db'); // Lidhja me databazën
 
 const Sponsor = sequelize.define('Sponsor', {
   name: {
@@ -13,18 +13,16 @@ const Sponsor = sequelize.define('Sponsor', {
       isEmail: true,
     },
   },
-  website: {
+  phone: {
     type: DataTypes.STRING,
-    validate: {
-      isUrl: true,
-    },
+    allowNull: true, 
   },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 }, {
-  timestamps: true,
+  timestamps: true, 
 });
 
 module.exports = Sponsor;

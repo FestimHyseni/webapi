@@ -15,7 +15,7 @@ const sequelize = require('./db');
 const Item = require('./models/item');
 const User = require('./models/user');
 const { createItem, getItems, updateItem, deleteItem } = require('./controller/itemController');
-
+const { createSponsor, getSponsors, updateSponsor, deleteSponsor } = require('./controller/sponsorController');
 
 const app = express();
 
@@ -95,6 +95,7 @@ passport.deserializeUser(async (id, done) => {
 const isAuthenticated = (req, res, next) => {
   const token = req.cookies['ubtsecured'];
   if (!token) {
+
     return res.status(401).json({ error: 'Kërkohet autentifikimi.' });
   }
   jwt.verify(token, process.env.JWT_SECRET || 'supersecret', (err, user) => {
@@ -172,6 +173,12 @@ app.post('/items', isAuthenticated, createItem);
 app.get('/items', isAuthenticated, getItems);
 app.put('/items/:id', isAuthenticated, updateItem);
 app.delete('/items/:id', isAuthenticated, deleteItem);
+
+// CRUD për sponsorët
+app.post('/sponsors', isAuthenticated, createSponsor);
+app.get('/sponsors', isAuthenticated, getSponsors);
+app.put('/sponsors/:id', isAuthenticated, updateSponsor);
+app.delete('/sponsors/:id', isAuthenticated, deleteSponsor);
 
 // Initialize server and ensure database and table creation
 const initializeDatabase = async () => {
