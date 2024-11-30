@@ -8,11 +8,14 @@ const createSponsor = async (req, res) => {
       userId: req.user.id, 
     };
     const sponsor = await Sponsor.create(sponsorData);
+    console.log('Sponsori është krijuar:', sponsor);
     res.json(sponsor);
   } catch (err) {
+    console.error('Gabim gjatë krijimit të sponsorit:', err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 
 const getSponsors = async (req, res) => {

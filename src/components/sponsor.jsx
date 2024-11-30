@@ -134,31 +134,32 @@ const SponsorList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSponsors = async () => {
+    const fetchSponsor = async () => {
       try {
-        const response = await fetch('http://localhost:5000/sponsors', {
-          method: 'GET',
-          credentials: 'include', // Siguron që cookie-t të dërgohen
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error fetching sponsors: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setSponsors(data);
-        setLoading(false);
+        const response = await axios.get('http://localhost:5000/sponsors', { withCredentials: true });
+        setSponsors(response.data);
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchSponsors();
+    fetchSponsor();
   }, []);
 
-  if (loading) return <p>Loading sponsors...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const deleteSponsor = async (id) => {
+    console.log('Dërgimi i kërkesës për DELETE për ID-në:', id); // Log për debugging
+    try {
+      await axios.delete(`http://localhost:5000/sponsors/${id}`, { withCredentials: true });
+      setSponsors(sponsors.filter(sponsor => sponsor.id !== id)); // Përditëso listën pas fshirjes
+    } catch (err) {
+      console.error('Gabim gjatë fshirjes së sponsorit:', err.message);
+    }
+  };
+  if (loading) return <p>Po ngarkohen ...</p>;
+  if (error) return <p>Gabim: {error}</p>;
+
 
   return (
     <div>
@@ -168,8 +169,20 @@ const SponsorList = () => {
       ) : (
         <ul>
           {sponsors.map((sponsor) => (
-            <li key={sponsor.id}>
-              {sponsor.name} - {sponsor.email}
+            <li key={sponsor.id} className="mb-4">
+              <h2 className="text-xl font-semibold">{sponsor.name}</h2>
+              <p> {sponsor.email}</p>
+              <p><strong>Telefoni:</strong> {sponsor.phone || 'Nuk është dhënë'}</p>
+              <p><strong>Adresa:</strong> {sponsor.address || 'Nuk është dhënë'}</p>
+              <div className="mt-2">
+                <Link to={`/edit-sponsor/${sponsor.id}`} className="bg-yellow-500 text-white px-4 py-2">Redakto</Link>
+                <button
+                  onClick={() => deleteSponsor(sponsor.id)}
+                  className="bg-red-500 text-white px-4 py-2 ml-2"
+                >
+                  Fshi
+                </button>
+              </div>
             </li>
           ))}
         </ul>
@@ -177,5 +190,7 @@ const SponsorList = () => {
     </div>
   );
 };
+
+
 // Eksportoni të gjithë komponentët për t'i përdorur në aplikacionin tuaj
 export { AddSponsor, EditSponsor, SponsorList };

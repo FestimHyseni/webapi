@@ -8,10 +8,8 @@ import Login from './components/Login';
 import { AddItem, EditItem, ItemList } from './components/CrudTest'; // Import CRUD components
 import { AddSponsor, EditSponsor, SponsorList } from './components/sponsor'; // Import Sponsor components
 import Home from './components/Home';
+import Menu from "./components/menu";  // Import Menu Page
 import {AddPost , EditPost , PostList} from './components/posts';
-
-
-
 import "./App.css"
 
 
@@ -30,7 +28,8 @@ function App() {
 
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-
+          <Route path="/menu" element={<Menu />} />
+          
           <Route path="/items" element={<ItemList />} />
             <Route path="/add" element={<AddItem />} /> 
             <Route path="/edit/:id" element={<EditItem />} /> 
