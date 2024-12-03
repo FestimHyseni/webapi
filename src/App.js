@@ -8,6 +8,8 @@ import Login from './components/Login';
 import { AddItem, EditItem, ItemList } from './components/CrudTest'; // Import CRUD components
 import { AddSponsor, EditSponsor, SponsorList } from './components/sponsor'; // Import Sponsor components
 import Home from './components/Home';
+import AboutUs from './components/AboutUs';
+import ContactUs from './components/ContactUs';
 import Menu from "./components/menu";  // Import Menu Page
 import {AddPost , EditPost , PostList} from './components/posts';
 import "./App.css"
@@ -19,9 +21,11 @@ function App() {
   return (
     <Router>
       <div>
-        <Navbar />
+     
         <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/contact-us" element={<ContactUs />} />
 
           <Route path="ItemList" element={<ItemList />} />
           <Route path="/add" element={<AddItem />} />

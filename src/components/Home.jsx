@@ -1,42 +1,40 @@
 import React from "react";
+import AboutUs from "./AboutUs"; 
+import { Link } from 'react-router-dom';
+
 
 const MenaxhimiKonferencave = () => {
   return (
     <div className="font-sans text-gray-800 bg-gray-100">
       {/* Header */}
+    
+              
       <header className="bg-blue-600 shadow-md">
-        <nav className="flex justify-between items-center px-8 py-6 text-white">
-          <div className="text-3xl font-extrabold">Menaxhimi i Konferencave</div>
-          <ul className="flex space-x-6 text-lg">
-            <li>
-              <a href="#" className="hover:text-teal-300 transition duration-200">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-teal-300 transition duration-200">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-teal-300 transition duration-200">
-                Workshops
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-teal-300 transition duration-200">
-                Event Highlights
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-teal-300 transition duration-200">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </header>
-
+  <nav className="flex justify-between items-center px-8 py-6 text-white">
+    <div className="text-3xl font-extrabold">Menaxhimi i Konferencave</div>
+    <ul className="flex space-x-6 text-lg">
+      <li>
+        <a href="#" className="hover:text-teal-300 transition duration-200">Home</a>
+      </li>
+      <nav> 
+        <Link to="/about-us" id="about-us" className="hover:text-teal-300 transition duration-200">
+          About Us
+        </Link>
+      </nav>
+      <li>
+        <a href="#" className="hover:text-teal-300 transition duration-200">Workshops</a>
+      </li>
+      <li>
+        <a href="#" className="hover:text-teal-300 transition duration-200">Event Highlights</a>
+      </li>
+      <nav id="contact-us">
+        <Link to="/contact-us" className="hover:text-teal-300 transition duration-200">
+          Contact Us
+        </Link>
+      </nav>
+    </ul>
+  </nav>
+</header>
       {/* Hero Section */}
       <section
         className="relative text-center text-white py-32 bg-cover bg-center"
