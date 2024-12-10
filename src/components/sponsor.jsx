@@ -1,62 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-// Komponenti për Shtimin e Sponsorëve
-const AddSponsor = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
-  const navigate = useNavigate();
-
-  const addSponsor = async () => {
-    if (!name || !email) {
-      alert('Emri dhe email janë të detyrueshme!');
-      return;
-    }
-    try {
-      await axios.post('http://localhost:5000/sponsors', { name, email, phone, address }, { withCredentials: true });
-      navigate('/sponsors');
-    } catch (error) {
-      console.error('Error adding sponsor:', error.response || error.message);
-    }
-  };
-
-  return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Shto Sponsorin</h1>
-      <input
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Emri"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Telefon"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-      />
-      <input
-        className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Adresa"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-      />
-      <button className="bg-blue-500 text-white px-4 py-2" onClick={addSponsor}>Shto Sponsorin</button>
-    </div>
-  );
-};
-
-// Komponenti për Editimin e Sponsorëve
+// Komponenti për Redaktimin e Sponsorit
 const EditSponsor = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -66,31 +12,31 @@ const EditSponsor = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchSponsor = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/sponsors/${id}`, { withCredentials: true });
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setPhone(response.data.phone);
+        setAddress(response.data.address);
+      } catch (error) {
+        console.error('Gabim gjatë marrjes së sponsorit:', error.message);
+      }
+    };
+
     fetchSponsor();
   }, [id]);
 
-  const fetchSponsor = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/sponsors/${id}`, { withCredentials: true });
-      setName(response.data.name);
-      setEmail(response.data.email);
-      setPhone(response.data.phone);
-      setAddress(response.data.address);
-    } catch (error) {
-      console.error('Error fetching sponsor:', error.response || error.message);
-    }
-  };
-
   const updateSponsor = async () => {
     if (!name || !email) {
-      alert('Emri dhe email janë të detyrueshme!');
+      alert('Emri dhe emaili janë të detyrueshme!');
       return;
     }
     try {
       await axios.put(`http://localhost:5000/sponsors/${id}`, { name, email, phone, address }, { withCredentials: true });
       navigate('/sponsors');
     } catch (error) {
-      console.error('Error updating sponsor:', error.response || error.message);
+      console.error('Gabim gjatë përditësimit të sponsorit:', error.message);
     }
   };
 
@@ -105,14 +51,13 @@ const EditSponsor = () => {
       />
       <input
         className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Email"
-        type="email"
+        placeholder="Emaili"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         className="border border-gray-300 p-2 w-full mb-4"
-        placeholder="Telefon"
+        placeholder="Telefoni"
         value={phone}
         onChange={(e) => setPhone(e.target.value)}
       />
@@ -127,14 +72,71 @@ const EditSponsor = () => {
   );
 };
 
-// Komponenti për Listimin e Sponsorëve
+// Komponenti për Shtimin e Sponsorit
+const AddSponsor = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const navigate = useNavigate();
+
+  const addSponsor = async () => {
+    if (!name || !email) {
+      alert('Emri dhe emaili janë të detyrueshme!');
+      return;
+    }
+    try {
+      const response = await axios.post('http://localhost:5000/sponsors', { name, email, phone, address }, { withCredentials: true });
+      if (response.status === 201) {
+        alert('Sponsori u krijua me sukses!');
+        navigate('/sponsors');
+      }
+    } catch (error) {
+      console.error('Gabim gjatë shtimit të sponsorit:', error.message);
+      alert('Shtimi i sponsorit dështoi. Ju lutemi provoni përsëri.');
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Shto Sponsorin</h1>
+      <input
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Emri"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Emaili"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Telefoni"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      />
+      <input
+        className="border border-gray-300 p-2 w-full mb-4"
+        placeholder="Adresa"
+        value={address}
+        onChange={(e) => setAddress(e.target.value)}
+      />
+      <button className="bg-blue-500 text-white px-4 py-2" onClick={addSponsor}>Shto Sponsorin</button>
+    </div>
+  );
+};
+
+// Komponenti për Listën e Sponsorëve
 const SponsorList = () => {
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSponsor = async () => {
+    const fetchSponsors = async () => {
       try {
         const response = await axios.get('http://localhost:5000/sponsors', { withCredentials: true });
         setSponsors(response.data);
@@ -145,21 +147,20 @@ const SponsorList = () => {
       }
     };
 
-    fetchSponsor();
+    fetchSponsors();
   }, []);
 
   const deleteSponsor = async (id) => {
-    console.log('Dërgimi i kërkesës për DELETE për ID-në:', id); // Log për debugging
     try {
       await axios.delete(`http://localhost:5000/sponsors/${id}`, { withCredentials: true });
-      setSponsors(sponsors.filter(sponsor => sponsor.id !== id)); // Përditëso listën pas fshirjes
+      setSponsors(sponsors.filter(sponsor => sponsor.id !== id));
     } catch (err) {
       console.error('Gabim gjatë fshirjes së sponsorit:', err.message);
     }
   };
-  if (loading) return <p>Po ngarkohen ...</p>;
-  if (error) return <p>Gabim: {error}</p>;
 
+  if (loading) return <p>Po ngarkohen sponsorët...</p>;
+  if (error) return <p>Gabim: {error}</p>;
 
   return (
     <div>
@@ -171,9 +172,9 @@ const SponsorList = () => {
           {sponsors.map((sponsor) => (
             <li key={sponsor.id} className="mb-4">
               <h2 className="text-xl font-semibold">{sponsor.name}</h2>
-              <p> {sponsor.email}</p>
-              <p><strong>Telefoni:</strong> {sponsor.phone || 'Nuk është dhënë'}</p>
-              <p><strong>Adresa:</strong> {sponsor.address || 'Nuk është dhënë'}</p>
+              <p>Email: {sponsor.email}</p>
+              <p>Telefon: {sponsor.phone}</p>
+              <p>Adresa: {sponsor.address}</p>
               <div className="mt-2">
                 <Link to={`/edit-sponsor/${sponsor.id}`} className="bg-yellow-500 text-white px-4 py-2">Redakto</Link>
                 <button
@@ -191,6 +192,4 @@ const SponsorList = () => {
   );
 };
 
-
-// Eksportoni të gjithë komponentët për t'i përdorur në aplikacionin tuaj
-export { AddSponsor, EditSponsor, SponsorList };
+export { EditSponsor, AddSponsor, SponsorList };
