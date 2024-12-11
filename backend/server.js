@@ -22,8 +22,6 @@ const { createItem, getItems, updateItem, deleteItem } = require('./controller/i
 const { createSponsor, getSponsors, updateSponsor, deleteSponsor } = require('./controller/sponsorController');
 const { createPost, getPosts , updatePost, deletePost } = require('./controller/postController');
 const app = express();
-
-const app = express();
 const router = express.Router();
 
 const Pjesmarresi = require('./models/Pjesmarresi');
