@@ -15,15 +15,18 @@ const sequelize = require('./db');
 const Item = require('./models/item');
 const User = require('./models/user');
 const Post = require('./models/post');
+const ContactForm = require('./models/ContactForm'); 
+const{ createContactForm, getContactForms, updateContactFormStatus, deleteContactForm } = require('./controller/contactFormController');
 const postRoutes = require('./routes/postRoutes');
 const { createItem, getItems, updateItem, deleteItem } = require('./controller/itemController');
 const { createSponsor, getSponsors, updateSponsor, deleteSponsor } = require('./controller/sponsorController');
 const { createPost, getPosts , updatePost, deletePost } = require('./controller/postController');
 const app = express();
 
+const app = express();
+const router = express.Router();
 
 const Pjesmarresi = require('./models/Pjesmarresi');
-
 
 // Configure session middleware with secure settings
 app.use(session({
@@ -220,10 +223,31 @@ app.delete('/sponsors/:id', isAuthenticated, deleteSponsor);
 
 app.use('/posts', postRoutes); 
 
+//Contact Form
+router.post('/send-message', createContactForm);
+router.get('/messages', getContactForms);
+router.put('/update-status/:id', updateContactFormStatus);
+router.delete('/delete/:id', deleteContactForm);
+
+app.post('/api/send-message', async (req, res) => {
+  const { emri, email, mesazhi } = req.body;
+
+  if (!emri || !email || !mesazhi) {
+    return res.status(400).json({ message: 'Të gjitha fushat janë të detyrueshme.' });
+  }
+
+  try {
+    const newMessage = await ContactForm.create({ emri, email, mesazhi });
+    res.status(201).json({ message: 'Mesazhi u dërgua me sukses!', data: newMessage });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Gabim në server.' });
+  }
+});
 // Initialize server and ensure database and table creation
 const initializeDatabase = async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
     app.listen(process.env.PORT, () => {
       console.log(`Serveri po punon neë portin ${process.env.PORT}`);
     });
