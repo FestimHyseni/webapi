@@ -1,4 +1,4 @@
-// models/item.js
+// models/item
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db');
 const User = require('./user');

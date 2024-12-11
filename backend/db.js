@@ -28,8 +28,11 @@ const createDatabase = async () => {
     await sequelize.authenticate();
     console.log('Lidhja me bazën e të dhënave është e suksesshme.');
 
+    const Pjesmarresi = require('./models/Pjesmarresi');
+
+
     // Krijo tabelat menjehere pas krijimit te databazes
-    await sequelize.sync();
+    await sequelize.sync();  // Use force: true to recreate the tables
     console.log('Tabela(t) janë krijuar në MySQL.');
   } catch (error) {
     console.error('Gabim gjatë krijimit të databazës ose tabelës:', error);

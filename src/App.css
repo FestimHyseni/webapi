@@ -11,22 +11,22 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: linear-gradient(to right, #38bdf8, #34d399);
-  display: flex;
-  align-items: center;
+  /* background: linear-gradient(to right, #38bdf8, #34d399); */
+  /* display: flex; */
+  /* align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100vh; */
   margin: 0;
 }
 
-.container {
+/* .container {
   width: 100%;
   max-width: 400px;
   padding: 20px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .form-title {
   font-size: 24px;

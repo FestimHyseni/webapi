@@ -11,7 +11,7 @@ const ContactUs = () => {
   <nav className="flex justify-between items-center px-8 py-6 text-white">
     <div className="text-3xl font-extrabold">Menaxhimi i Konferencave</div>
     <ul className="flex space-x-6 text-lg">
-       <Link to="/home" id = "home" className="hover:text-teal-300 transition duration-200">
+       <Link to="/" id = "home" className="hover:text-teal-300 transition duration-200">
            Home
         </Link>
       <nav> 

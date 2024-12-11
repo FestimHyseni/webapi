@@ -21,6 +21,10 @@ const { createSponsor, getSponsors, updateSponsor, deleteSponsor } = require('./
 const { createPost, getPosts , updatePost, deletePost } = require('./controller/postController');
 const app = express();
 
+
+const Pjesmarresi = require('./models/Pjesmarresi');
+
+
 // Configure session middleware with secure settings
 app.use(session({
   secret: process.env.SESSION_SECRET || 'supersecret', 
@@ -136,6 +140,30 @@ app.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+app.post('/add-participant/:itemId', isAuthenticated, async (req, res) => {
+  const { itemId } = req.params;
+  const userId = req.user.id; // Get the logged-in user ID from the session
+
+  try {
+    // Check if the conference exists
+    const item = await Item.findByPk(itemId);
+    if (!item) {
+      return res.status(404).json({ message: 'Konferenca nuk u gjet.' });
+    }
+
+    // Add participant
+    const newParticipant = await Pjesmarresi.create({
+      Pjesmarresi: req.user.username,  // Store the username or any other info of the participant
+      itemId: itemId,
+    });
+
+    res.status(200).json({ message: 'Pjesëmarrësi është shtuar me sukses.', participant: newParticipant });
+  } catch (error) {
+    console.error('Error adding participant:', error);
+    res.status(500).json({ message: 'Ka ndodhur një gabim gjatë shtimit të pjesëmarrësit.' });
+  }
+});
+
 // Route to get the logged-in user's information
 app.get('/user', isAuthenticated, (req, res) => {
   res.json({ user: req.user });
@@ -153,6 +181,14 @@ app.post('/register', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.get('/api/numri_pjesmarresve', (req, res) => {
+  const query = 'SELECT COUNT(*) AS numri FROM Pjesmarresi'; // Ndrysho emrin e tabelës dhe fushës sipas nevojës
+  db.query(query, (err, result) => {
+    if (err) throw err;
+    res.json({ numri: result[0].numri });
+  });
 });
 
 // Logout route

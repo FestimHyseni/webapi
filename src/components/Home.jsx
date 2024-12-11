@@ -1,66 +1,63 @@
 import React from "react";
-import AboutUs from "./AboutUs"; 
-import { Link } from 'react-router-dom';
-import heroImage from "./image.png";
-
 
 const MenaxhimiKonferencave = () => {
   return (
     <div className="font-sans text-gray-800 bg-gray-100">
       {/* Header */}
-    
-              
       <header className="bg-blue-600 shadow-md">
-  <nav className="flex justify-between items-center px-8 py-6 text-white">
-    <div className="text-3xl font-extrabold">Menaxhimi i Konferencave</div>
-    <ul className="flex space-x-6 text-lg">
-      <li>
-        <a href="#" className="hover:text-teal-300 transition duration-200">Home</a>
-      </li>
-      <nav> 
-        <Link to="/about-us" id="about-us" className="hover:text-teal-300 transition duration-200">
-          About Us
-        </Link>
-      </nav>
-      <li>
-        <a href="#" className="hover:text-teal-300 transition duration-200">Workshops</a>
-      </li>
-      <li>
-        <a href="#" className="hover:text-teal-300 transition duration-200">Event Highlights</a>
-      </li>
-      <nav id="contact-us">
-        <Link to="/contact-us" className="hover:text-teal-300 transition duration-200">
-          Contact Us
-        </Link>
-      </nav>
-    </ul>
-  </nav>
-</header>
+        <nav className="flex justify-between items-center px-8 py-6 text-white">
+          <div className="text-3xl font-extrabold">Menaxhimi i Konferencave</div>
+          <ul className="flex space-x-6 text-lg">
+            <li>
+              <a href="/" className="hover:text-teal-300 transition duration-200">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/about-us" className="hover:text-teal-300 transition duration-200">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="" className="hover:text-teal-300 transition duration-200">
+                Workshops
+              </a>
+            </li>
+            <li>
+              <a href="#" className="hover:text-teal-300 transition duration-200">
+                Event Highlights
+              </a>
+            </li>
+            <li>
+              <a href="/contact-us" className="hover:text-teal-300 transition duration-200">
+                Contact
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
       {/* Hero Section */}
       <section
-  id="hero"
-  style={{
-    backgroundImage: `url(${heroImage})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    height: "100vh", // Use full viewport height
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "white",
-    textShadow: "0 2px 5px rgba(0, 0, 0, 0.7)",
-    padding: "0 20px", // Ensure some padding for smaller screens
-  }}
->
-  <h1 style={{ fontSize: "4rem", fontWeight: "700" }}>Mirësevini në Platformën tonë</h1>
-  <p style={{ fontSize: "1.5rem", fontWeight: "400", maxWidth: "700px", textAlign: "center" }}>
-    Organizoni konferenca dhe menaxhoni sponsorë me lehtësi!
-  </p>
-  <a href="/menu" className="btn btn-warning btn-lg mt-3">Shiko më shumë</a>
-
-</section>
+        className="relative text-center text-white py-32 bg-cover bg-center"
+        style={{ backgroundImage: "url('hero-bg.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="relative z-10">
+          <h1 className="text-5xl font-bold mb-4 leading-tight">
+            Mirësevini në Menaxhimin e Konferencave
+          </h1>
+          <p className="text-xl mb-8">
+            Platforma jonë është dizajnuar për të përmbushur nevojat e çdo organizatori të eventeve.
+          </p>
+          <a
+            href="/menu"
+            className="bg-teal-500 hover:bg-teal-600 text-white px-8 py-4 rounded-xl text-lg font-semibold transition duration-300"
+          >
+            Fillo Tani
+          </a>
+        </div>
+      </section>
 
       {/* Features Section */}
       <section className="py-16 bg-gray-100">
