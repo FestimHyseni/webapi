@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ContactForm = require('./models/contactform');
+const ContactForm = require('../models/contactform');
 
 // Krijimi i një formulari kontakti të ri
 const createContactForm = async (req, res) => {
